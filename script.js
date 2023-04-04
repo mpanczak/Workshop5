@@ -44,7 +44,7 @@ function apiListTasks() {
 //   }
 // );
 
-//Render
+//RenderTask
 
 
 function renderTask(taskId, title, description, status) {
@@ -82,7 +82,66 @@ function renderTask(taskId, title, description, status) {
   deleteButton.className = 'btn btn-outline-danger btn-sm ml-2';
   deleteButton.innerText = 'Delete';
   headerRightDiv.appendChild(deleteButton);
+
+  const list = document.createElement('ul');
+  section.appendChild(list);
+
+  const formDiv = document.createElement('div');
+  formDiv.className = 'cart-body';
+  section.appendChild(formDiv);
+
+  const form = document.createElement('form');
+  formDiv.appendChild(form)
+
+  const inputDiv = document.createElement('div');
+  inputDiv.className = 'input-group';
+  form.appendChild(inputDiv);
+
+  const inputElement = document.createElement('input');
+  inputElement.className = 'form-control';
+  inputElement.setAttribute('type', 'text');
+  inputElement.setAttribute('placeholder', 'Operation description');
+  inputElement.setAttribute('minlength', '5');
+  inputDiv.appendChild(inputElement);
+
+  const buttonDiv = document.createElement('div');
+  buttonDiv.className = 'input-group-append';
+  inputDiv.appendChild(buttonDiv);
+
+  const formButton = document.createElement('button');
+  formButton.classList.add('btn');
+  formButton.classList.add('btn-info');
+  formButton.innerText = 'Add';
+  buttonDiv.appendChild(formButton);
+  
+
+
 }
+
+// //Render Operations
+// function renderOperation(operationsList, status, operationId, operationDescription, timeSpent) {
+//   const li = document.createElement('li');
+//   li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+//   // operationsList to lista <ul>
+//   operationsList.appendChild(li);
+
+//   const descriptionDiv = document.createElement('div');
+//   descriptionDiv.innerText = operationDescription;
+//   li.appendChild(descriptionDiv);
+
+//   const time = document.createElement('span');
+//   time.className = 'badge badge-success badge-pill ml-2';
+//   time.innerText = timeSpent + 'm';
+//   descriptionDiv.appendChild(time);
+
+//   if(status == "open") {
+//     // ...
+//   }
+//   // ...
+// }
+
+
 
 
 //Create
