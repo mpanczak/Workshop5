@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     renderTask(task.id, task.title, task.description, task.status);
                 });
         });
+    document.querySelector('form.js-task-adding-form').addEventListener('submit', function (event){
+        event.preventDefault();
+        const formElements = event.currentTarget.elements;
+        apiCreateTask(formElements.title.value, formElements.description.value );
+    });
 });
 
 
@@ -174,29 +179,18 @@ function convertTime (number){
 
 //Create
 
-// function apiCreateTask(title, description) {
-//   return fetch(
-//     apihost + '/api/tasks',
-//     {
-//       method: 'POST',
-//       headers: {
-//         'Authorization': apikey,
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({ title: title, description: description, status: 'open' })
-//     }
-//   ).then(
-//     function(resp) {
-//       if(!resp.ok) {
-//         alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
-//       }
-//       return resp.json();
-//     }
-//   )
-// }
-
-// apiCreateTask('Przykładowy tytuł', 'Przykładowy opis').then(
-//   function(response) {
-//     console.log('Odpowiedź z serwera to:', response);
-//   }
-// );
+function apiCreateTask(title, description) {
+  return fetch(
+    apihost + '/api/tasks',
+    {
+      method: 'POST',
+      headers: {'Authorization': apikey, 'Content-Type': 'application/json'},
+      body: JSON.stringify({ title: title, description: description, status: 'open' })
+    }).then(
+    function(resp) {
+      if(!resp.ok) {
+        alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+      }
+      return resp.json();
+    });
+}
