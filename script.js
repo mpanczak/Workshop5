@@ -72,6 +72,12 @@ function renderTask(taskId, title, description, status) {
     const deleteButton = document.createElement('button');
     deleteButton.className = 'btn btn-outline-danger btn-sm ml-2';
     deleteButton.innerText = 'Delete';
+    deleteButton.addEventListener('click', function (event){
+        event.preventDefault();
+        apiDeleteTask(taskId).then(function () {
+            section.remove()
+        });
+    });
     headerRightDiv.appendChild(deleteButton);
 
     const list = document.createElement('ul');
@@ -193,4 +199,19 @@ function apiCreateTask(title, description) {
       }
       return resp.json();
     });
+}
+
+function apiDeleteTask(id) {
+    return fetch(
+        apihost + `/api/tasks/${id}`,
+        {
+            method: 'DELETE',
+            headers: {Authorization: apikey}
+        }).then(
+        function (resp) {
+            if (!resp.ok) {
+                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+            }
+            return resp.json();
+        });
 }
