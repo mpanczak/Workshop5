@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-//List
+//List task
 function apiListTasks() {
   return fetch(
     apihost + '/api/tasks',
@@ -37,16 +37,7 @@ function apiListTasks() {
   )
 }
 
-// apiListTasks().then(
-//   function(response) {
-//     console.log('Serwer zwrócił', response.data.length, 'zadań');
-//     console.log('Tytuł pierwszego to', response.data[0].title);
-//   }
-// );
-
 //RenderTask
-
-
 function renderTask(taskId, title, description, status) {
   const section = document.createElement('section');
   section.className = 'card mt-5 shadow-sm';
@@ -86,6 +77,16 @@ function renderTask(taskId, title, description, status) {
   const list = document.createElement('ul');
   section.appendChild(list);
 
+
+// "taskId" i "status" - bo tak nazywają się argumenty w funkcji "renderTask"
+apiListOperationsForTask(taskId).then(
+  function(response) {
+    response.data.forEach(
+      function(operation) { renderOperation(list, operation.id, status, operation.description, operation.timeSpent); }
+    );
+  }
+);
+
   const formDiv = document.createElement('div');
   formDiv.className = 'cart-body';
   section.appendChild(formDiv);
@@ -118,28 +119,46 @@ function renderTask(taskId, title, description, status) {
 
 }
 
-// //Render Operations
-// function renderOperation(operationsList, status, operationId, operationDescription, timeSpent) {
-//   const li = document.createElement('li');
-//   li.className = 'list-group-item d-flex justify-content-between align-items-center';
+// List operations
+function apiListOperationsForTask(taskId) {
+  return fetch(
+    apihost + `/api/tasks/${taskId}/operations`,
+    {
+      headers: { Authorization: apikey }
+    }
+  ).then(
+    function(resp) {
+      if(!resp.ok) {
+        alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+      }
+      return resp.json();
+    }
+  );
+}
 
-//   // operationsList to lista <ul>
-//   operationsList.appendChild(li);
 
-//   const descriptionDiv = document.createElement('div');
-//   descriptionDiv.innerText = operationDescription;
-//   li.appendChild(descriptionDiv);
+//Render Operations
+function renderOperation(operationsList, status, operationId, operationDescription, timeSpent) {
+  const li = document.createElement('li');
+  li.className = 'list-group-item d-flex justify-content-between align-items-center';
 
-//   const time = document.createElement('span');
-//   time.className = 'badge badge-success badge-pill ml-2';
-//   time.innerText = timeSpent + 'm';
-//   descriptionDiv.appendChild(time);
+  // operationsList to lista <ul>
+  operationsList.appendChild(li);
 
-//   if(status == "open") {
-//     // ...
-//   }
-//   // ...
-// }
+  const descriptionDiv = document.createElement('div');
+  descriptionDiv.innerText = operationDescription;
+  li.appendChild(descriptionDiv);
+
+  const time = document.createElement('span');
+  time.className = 'badge badge-success badge-pill ml-2';
+  time.innerText = timeSpent + 'm';
+  descriptionDiv.appendChild(time);
+
+  if(status == "open") {
+    //todo buttons ...
+  }
+  // ...
+}
 
 
 
