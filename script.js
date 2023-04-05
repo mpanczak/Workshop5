@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('form.js-task-adding-form').addEventListener('submit', function (event){
         event.preventDefault();
         const formElements = event.currentTarget.elements;
-        apiCreateTask(formElements.title.value, formElements.description.value );
+        apiCreateTask(formElements.title.value, formElements.description.value ).then(function (task){
+            // console.log(task)
+            renderTask(task.data.id, task.data.title, task.data.description, task.data.status);
+        });
     });
 });
 
