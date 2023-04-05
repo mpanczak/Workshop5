@@ -130,7 +130,7 @@ function apiListOperationsForTask(taskId) {
 
 
 //Render Operations
-function renderOperation(operationsList, status, operationId, operationDescription, timeSpent) {
+function renderOperation(operationsList, operationId, status, operationDescription, timeSpent) {
     const li = document.createElement('li');
     li.className = 'list-group-item d-flex justify-content-between align-items-center';
 
@@ -146,10 +146,24 @@ function renderOperation(operationsList, status, operationId, operationDescripti
     time.innerText = timeSpent + 'm';
     descriptionDiv.appendChild(time);
 
-    if (status == "open") {
-        //todo buttons ...
+    const buttonsDiv = document.createElement('div');
+    li.appendChild(buttonsDiv);
+
+    if (status == 'open') {
+        const button15m = document.createElement('button');
+        button15m.className = 'btn btn-outline-success btn-sm mr-2';
+        button15m.innerText = '+15m';
+        buttonsDiv.appendChild(button15m);
+
+        const button1h = document.createElement('button');
+        button1h.className = 'btn btn-outline-success btn-sm mr-2';
+        button1h.innerText = '+1h';
+        buttonsDiv.appendChild(button1h);
     }
-    // ...
+    const deleteOperation = document.createElement('button');
+    deleteOperation.className = 'btn btn-outline-danger btn-sm';
+    deleteOperation.innerText = 'Delete';
+    buttonsDiv.appendChild(deleteOperation);
 }
 
 
