@@ -166,6 +166,11 @@ function renderOperation(operationsList, operationId, status, operationDescripti
     buttonsDiv.appendChild(deleteOperation);
 }
 
+function convertTime (number){
+    const hours = parseInt(number/60);
+    const minutes = number%60;
+    return `${hours}h ${minutes}m`;
+}
 
 //Create
 
