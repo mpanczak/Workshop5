@@ -124,6 +124,21 @@ function apiUpdateOperation(operationId, description, timeSpent) {
         });
 }
 
+// Delete operation
+function apiDeleteOperation(operationId) {
+    return fetch(apihost + `/api/operations/${operationId}`,
+        {
+            method: 'DELETE',
+            headers: {'Authorization': apikey, 'Content-Type': 'application/json'},
+        }).then(
+        function (resp) {
+            if (!resp.ok) {
+                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+            }
+            return resp.json();
+        });
+}
+
 ///////////////// RENDER
 //RenderTask
 function renderTask(taskId, title, description, status) {
@@ -267,6 +282,12 @@ function renderOperation(operationsList, operationId, status, operationDescripti
     deleteOperation.className = 'btn btn-outline-danger btn-sm';
     deleteOperation.innerText = 'Delete';
     buttonsDiv.appendChild(deleteOperation);
+
+    deleteOperation.addEventListener('click', function () {
+        apiDeleteOperation(operationId).then(function (response) {
+            li.remove();
+        });
+    });
 }
 
 ///////////////// OTHER
