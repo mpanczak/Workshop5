@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     renderTask(task.id, task.title, task.description, task.status);
                 });
         });
-    document.querySelector('form.js-task-adding-form').addEventListener('submit', function (event){
+    document.querySelector('form.js-task-adding-form').addEventListener('submit', function (event) {
         event.preventDefault();
         const formElements = event.currentTarget.elements;
-        apiCreateTask(formElements.title.value, formElements.description.value ).then(function (task){
+        apiCreateTask(formElements.title.value, formElements.description.value).then(function (task) {
             // console.log(task)
             renderTask(task.data.id, task.data.title, task.data.description, task.data.status);
         });
@@ -39,6 +39,7 @@ function apiListTasks() {
             return resp.json();
         });
 }
+
 //Create task
 function apiCreateTask(title, description) {
     return fetch(
@@ -46,15 +47,16 @@ function apiCreateTask(title, description) {
         {
             method: 'POST',
             headers: {'Authorization': apikey, 'Content-Type': 'application/json'},
-            body: JSON.stringify({ title: title, description: description, status: 'open' })
+            body: JSON.stringify({title: title, description: description, status: 'open'})
         }).then(
-        function(resp) {
-            if(!resp.ok) {
+        function (resp) {
+            if (!resp.ok) {
                 alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
             }
             return resp.json();
         });
 }
+
 //Delete task
 function apiDeleteTask(id) {
     return fetch(
@@ -84,6 +86,24 @@ function apiListOperationsForTask(taskId) {
             if (!resp.ok) {
                 alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
             }
+            return resp.json();
+        });
+}
+
+// Create operation
+function apiCreateOperationForTask(taskId, description) {
+    return fetch(
+        apihost + `/api/tasks/${taskId}/operations`,
+        {
+            method: 'POST',
+            headers: {'Authorization': apikey, 'Content-Type': 'application/json'},
+            body: JSON.stringify({description: description, timeSpent: '0'})
+        }).then(
+        function (resp) {
+            if (!resp.ok) {
+                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+            }
+            // console.log(resp.json());
             return resp.json();
         });
 }
@@ -124,7 +144,7 @@ function renderTask(taskId, title, description, status) {
     const deleteButton = document.createElement('button');
     deleteButton.className = 'btn btn-outline-danger btn-sm ml-2';
     deleteButton.innerText = 'Delete';
-    deleteButton.addEventListener('click', function (event){
+    deleteButton.addEventListener('click', function (event) {
         event.preventDefault();
         apiDeleteTask(taskId).then(function () {
             section.remove()
@@ -135,7 +155,6 @@ function renderTask(taskId, title, description, status) {
     const list = document.createElement('ul');
     section.appendChild(list);
 
-// "taskId" i "status" - bo tak nazywają się argumenty w funkcji "renderTask"
     apiListOperationsForTask(taskId).then(
         function (response) {
             response.data.forEach(
@@ -149,6 +168,14 @@ function renderTask(taskId, title, description, status) {
     section.appendChild(formDiv);
 
     const form = document.createElement('form');
+
+    form.addEventListener('submit', function (event){
+        event.preventDefault();
+        apiCreateOperationForTask(taskId, event.currentTarget.elements[0].value).then(function (operation) {
+            renderOperation(list, operation.data.id, status, operation.data.description, operation.data.timeSpent)
+        });
+
+    })
     formDiv.appendChild(form)
 
     const inputDiv = document.createElement('div');
@@ -174,6 +201,7 @@ function renderTask(taskId, title, description, status) {
 
 
 }
+
 //Render Operations
 function renderOperation(operationsList, operationId, status, operationDescription, timeSpent) {
     const li = document.createElement('li');
@@ -210,10 +238,11 @@ function renderOperation(operationsList, operationId, status, operationDescripti
     deleteOperation.innerText = 'Delete';
     buttonsDiv.appendChild(deleteOperation);
 }
+
 ///////////////// OTHER
-function convertTime (number){
-    const hours = parseInt(number/60);
-    const minutes = number%60;
+function convertTime(number) {
+    const hours = parseInt(number / 60);
+    const minutes = number % 60;
     return `${hours}h ${minutes}m`;
 }
 
