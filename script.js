@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
+///////////////// API TASK
 //List task
 function apiListTasks() {
     return fetch(
@@ -39,7 +39,56 @@ function apiListTasks() {
             return resp.json();
         });
 }
+//Create task
+function apiCreateTask(title, description) {
+    return fetch(
+        apihost + '/api/tasks',
+        {
+            method: 'POST',
+            headers: {'Authorization': apikey, 'Content-Type': 'application/json'},
+            body: JSON.stringify({ title: title, description: description, status: 'open' })
+        }).then(
+        function(resp) {
+            if(!resp.ok) {
+                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+            }
+            return resp.json();
+        });
+}
+//Delete task
+function apiDeleteTask(id) {
+    return fetch(
+        apihost + `/api/tasks/${id}`,
+        {
+            method: 'DELETE',
+            headers: {Authorization: apikey}
+        }).then(
+        function (resp) {
+            if (!resp.ok) {
+                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+            }
+            return resp.json();
+        });
+}
 
+///////////////// API OPERATION
+// List operations
+function apiListOperationsForTask(taskId) {
+    return fetch(
+        apihost + `/api/tasks/${taskId}/operations`,
+        {
+            headers: {Authorization: apikey}
+        }
+    ).then(
+        function (resp) {
+            if (!resp.ok) {
+                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+            }
+            return resp.json();
+        });
+}
+
+///////////////// RENDER
 //RenderTask
 function renderTask(taskId, title, description, status) {
     const section = document.createElement('section');
@@ -125,24 +174,6 @@ function renderTask(taskId, title, description, status) {
 
 
 }
-
-// List operations
-function apiListOperationsForTask(taskId) {
-    return fetch(
-        apihost + `/api/tasks/${taskId}/operations`,
-        {
-            headers: {Authorization: apikey}
-        }
-    ).then(
-        function (resp) {
-            if (!resp.ok) {
-                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
-            }
-            return resp.json();
-        });
-}
-
-
 //Render Operations
 function renderOperation(operationsList, operationId, status, operationDescription, timeSpent) {
     const li = document.createElement('li');
@@ -179,42 +210,11 @@ function renderOperation(operationsList, operationId, status, operationDescripti
     deleteOperation.innerText = 'Delete';
     buttonsDiv.appendChild(deleteOperation);
 }
-
+///////////////// OTHER
 function convertTime (number){
     const hours = parseInt(number/60);
     const minutes = number%60;
     return `${hours}h ${minutes}m`;
 }
 
-//Create
 
-function apiCreateTask(title, description) {
-  return fetch(
-    apihost + '/api/tasks',
-    {
-      method: 'POST',
-      headers: {'Authorization': apikey, 'Content-Type': 'application/json'},
-      body: JSON.stringify({ title: title, description: description, status: 'open' })
-    }).then(
-    function(resp) {
-      if(!resp.ok) {
-        alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
-      }
-      return resp.json();
-    });
-}
-
-function apiDeleteTask(id) {
-    return fetch(
-        apihost + `/api/tasks/${id}`,
-        {
-            method: 'DELETE',
-            headers: {Authorization: apikey}
-        }).then(
-        function (resp) {
-            if (!resp.ok) {
-                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
-            }
-            return resp.json();
-        });
-}
