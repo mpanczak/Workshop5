@@ -108,6 +108,22 @@ function apiCreateOperationForTask(taskId, description) {
         });
 }
 
+// Update operation
+function apiUpdateOperation(operationId, description, timeSpent) {
+    return fetch(apihost + `/api/operations/${operationId}`,
+        {
+            method: 'PUT',
+            headers: {'Authorization': apikey, 'Content-Type': 'application/json'},
+            body: JSON.stringify({description: description, timeSpent: timeSpent})
+        }).then(
+        function (resp) {
+            if (!resp.ok) {
+                alert('Wystąpił błąd! Otwórz devtools i zakładkę Sieć/Network, i poszukaj przyczyny');
+            }
+            return resp.json();
+        });
+}
+
 ///////////////// RENDER
 //RenderTask
 function renderTask(taskId, title, description, status) {
@@ -169,7 +185,7 @@ function renderTask(taskId, title, description, status) {
 
     const form = document.createElement('form');
 
-    form.addEventListener('submit', function (event){
+    form.addEventListener('submit', function (event) {
         event.preventDefault();
         apiCreateOperationForTask(taskId, event.currentTarget.elements[0].value).then(function (operation) {
             renderOperation(list, operation.data.id, status, operation.data.description, operation.data.timeSpent)
@@ -228,10 +244,24 @@ function renderOperation(operationsList, operationId, status, operationDescripti
         button15m.innerText = '+15m';
         buttonsDiv.appendChild(button15m);
 
+        button15m.addEventListener('click', function () {
+            apiUpdateOperation(operationId, operationDescription, timeSpent + 15).then(function (response) {
+                time.innerText = response.data.timeSpent + 'm';
+                timeSpent = response.data.timeSpent; // DO PRZEANALIZOWANIA TODO
+            });
+        });
+
         const button1h = document.createElement('button');
         button1h.className = 'btn btn-outline-success btn-sm mr-2';
         button1h.innerText = '+1h';
         buttonsDiv.appendChild(button1h);
+
+        button1h.addEventListener('click', function () {
+            apiUpdateOperation(operationId, operationDescription, timeSpent + 60).then(function (response) {
+                time.innerText = response.data.timeSpent;
+                timeSpent = response.data.timeSpent;
+            });
+        });
     }
     const deleteOperation = document.createElement('button');
     deleteOperation.className = 'btn btn-outline-danger btn-sm';
