@@ -232,7 +232,7 @@ function renderOperation(operationsList, operationId, status, operationDescripti
 
     const time = document.createElement('span');
     time.className = 'badge badge-success badge-pill ml-2';
-    time.innerText = timeSpent + 'm';
+    time.innerText = convertTime(timeSpent);
     descriptionDiv.appendChild(time);
 
     const buttonsDiv = document.createElement('div');
@@ -246,7 +246,7 @@ function renderOperation(operationsList, operationId, status, operationDescripti
 
         button15m.addEventListener('click', function () {
             apiUpdateOperation(operationId, operationDescription, timeSpent + 15).then(function (response) {
-                time.innerText = response.data.timeSpent + 'm';
+                time.innerText = convertTime(response.data.timeSpent);
                 timeSpent = response.data.timeSpent; // DO PRZEANALIZOWANIA TODO
             });
         });
@@ -258,7 +258,7 @@ function renderOperation(operationsList, operationId, status, operationDescripti
 
         button1h.addEventListener('click', function () {
             apiUpdateOperation(operationId, operationDescription, timeSpent + 60).then(function (response) {
-                time.innerText = response.data.timeSpent;
+                time.innerText = convertTime(response.data.timeSpent);
                 timeSpent = response.data.timeSpent;
             });
         });
